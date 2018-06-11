@@ -5,9 +5,14 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-include_directories("src/main/cpp" "src/main/cpp/common" "src/main/cpp/jni"
-                    "src/main/cpp/shapes" ${ANDROID_NDK}/sources/android/native_app_glue/
-                    "src/main/external/glm")
+include_directories(src/main/cpp
+                    src/main/cpp/common
+                    src/main/cpp/jni
+                    src/main/cpp/shapes
+                    src/main/external/assimp-3.0/include
+                    ${ANDROID_NDK}/sources/android/native_app_glue/
+                    src/main/external/glm
+                    src/main/external/opencv-3.0.0/include)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -32,7 +37,9 @@ add_library(GLESNative SHARED
             src/main/cpp/common/myShader.cpp
             src/main/cpp/common/MyJNIShaderHelper.cpp
             src/main/cpp/common/MyCamera.cpp
-            src/main/cpp/shapes/cube.cpp)
+            src/main/cpp/common/assimp_loader.cpp
+            src/main/cpp/shapes/cube.cpp
+            src/main/cpp/shapes/assimp_model.cpp)
 add_library( app-glue
              STATIC
              ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c )
@@ -58,4 +65,5 @@ target_link_libraries( # Specifies the target library.
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
-target_link_libraries(GLESNative android log app-glue GLESv2)
+target_link_libraries(GLESNative android log app-glue GLESv2
+                      src/main/external/assimp-3.0/libs/armeabi-v7a/libassimp.so)
